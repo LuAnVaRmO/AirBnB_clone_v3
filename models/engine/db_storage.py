@@ -21,7 +21,7 @@ classes = {"Amenity": Amenity, "City": City,
 
 
 class DBStorage:
-    """interaacts with the MySQL database"""
+    """interacts with the MySQL database"""
     __engine = None
     __session = None
 
@@ -74,3 +74,15 @@ class DBStorage:
     def close(self):
         """call remove() method on the private session attribute"""
         self.__session.remove()
+
+    def get(self, cls, id):
+        """A method to retrieve one object"""
+        obj_dict = self.all(cls)
+        for obj in obj_dict.values():
+            if id == obj.id:
+                return obj
+        return None
+
+    def count(self, cls=None):
+        """A method to count the number of objects in storage"""
+        return len(self.all(cls))
