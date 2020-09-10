@@ -33,7 +33,7 @@ def get_city_id(city_id=None):
 
 
 @app_views.route('/cities/<city_id>', methods=['PUT'], strict_slashes=False)
-def update_city(city_id):
+def put_city(city_id):
     """ Update City """
     city = storage.get(City, city_id)
     if city:
@@ -63,7 +63,7 @@ def delete_city(city_id):
 
 
 @app_views.route('/states/<state_id>/cities', methods=['POST'], strict_slashes=False)
-def update_city(state_id):
+def post_city(state_id):
     """ Create City """
     body = request.get_json()
     state = storage.get(State, state_id)
