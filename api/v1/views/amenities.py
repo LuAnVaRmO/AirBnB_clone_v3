@@ -52,8 +52,7 @@ def post_amenity():
     return jsonify(error='Not a JSON'), 400
 
 
-@app_views.route('/amenities/<amenity_id>', methods=['PUT'],
-                 strict_slashes=False)
+@app_views.route('/amenities/<amenity_id>', methods=['PUT'], strict_slashes=False)
 def put_amenity(amenity_id=None):
     """ Update a Amenity """
 
