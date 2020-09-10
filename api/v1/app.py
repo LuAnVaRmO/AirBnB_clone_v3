@@ -1,4 +1,4 @@
-#!flask/bin/python
+#!/usr/bin/python3
 """ RestFul API """
 from models import storage
 from os import getenv
