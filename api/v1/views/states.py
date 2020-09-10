@@ -61,4 +61,3 @@ def delete_state(state_id):
         return jsonify({}), 200
     else:
         abort(404)
-

@@ -6,6 +6,8 @@ from models import storage
 from models.state import State
 from models.city import City
 from models.amenity import Amenity
+from models.user import User
+from models.place import Place
 
 
 @app_views.route('/status', methods=['GET'], strict_slashes=False)
@@ -19,10 +21,10 @@ def stats():
     """ Retrieves the number of each objects by type """
     return jsonify({"amenities": storage.count(Amenity),
                     "cities": storage.count(City),
-                    "places": storage.count("Place"),
+                    "places": storage.count(Place),
                     "reviews": storage.count("Review"),
                     "states": storage.count(State),
-                    "users": storage.count("User")})
+                    "users": storage.count(User)})
 
 
 if __name__ == "__main__":

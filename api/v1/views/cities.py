@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" States API module """
+""" Cities API module """
 from flask import jsonify, request, abort
 from api.v1.views import app_views
 from models.state import State
@@ -50,18 +50,6 @@ def put_city(city_id):
         abort(404)
 
 
-@app_views.route('/cities/<city_id>', methods=['DELETE'], strict_slashes=False)
-def delete_city(city_id):
-    """Delete city """
-    city = storage.get(City, city_id)
-    if city:
-        storage.delete(city)
-        storage.save()
-        return jsonify({}), 200
-    else:
-        abort(404)
-
-
 @app_views.route('/states/<state_id>/cities', methods=['POST'], strict_slashes=False)
 def post_city(state_id):
     """ Create City """
@@ -77,3 +65,15 @@ def post_city(state_id):
     new_city = City(**body)
     storage.save()
     return jsonify(new_city.to_dict()), 201
+
+
+@app_views.route('/cities/<city_id>', methods=['DELETE'], strict_slashes=False)
+def delete_city(city_id):
+    """Delete city """
+    city = storage.get(City, city_id)
+    if city:
+        storage.delete(city)
+        storage.save()
+        return jsonify({}), 200
+    else:
+        abort(404)
