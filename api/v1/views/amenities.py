@@ -7,7 +7,8 @@ from models.amenity import Amenity
 
 
 @app_views.route('/amenities', methods=['GET'], strict_slashes=False)
-@app_views.route('/amenities/<amenity_id>', methods=['GET'], strict_slashes=False)
+@app_views.route('/amenities/<amenity_id>', methods=['GET'],
+                 strict_slashes=False)
 def get_amenity(amenity_id=None):
     """ get all amenities or amenity by id request """
 
@@ -24,7 +25,8 @@ def get_amenity(amenity_id=None):
         return jsonify(list_), 200
 
 
-@app_views.route('/amenities/<amenity_id>', methods=['DELETE'], strict_slashes=False)
+@app_views.route('/amenities/<amenity_id>', methods=['DELETE'],
+                 strict_slashes=False)
 def delete_amenity(amenity_id=None):
     """ Delete amenity """
 
@@ -52,7 +54,8 @@ def post_amenity():
     return jsonify(error='Not a JSON'), 400
 
 
-@app_views.route('/amenities/<amenity_id>', methods=['PUT'], strict_slashes=False)
+@app_views.route('/amenities/<amenity_id>', methods=['PUT'],
+                 strict_slashes=False)
 def put_amenity(amenity_id=None):
     """ Update a Amenity """
 
