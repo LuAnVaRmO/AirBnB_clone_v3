@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """ States API module """
-from api.v1.views import app_views
+
 from flask import jsonify, request, abort
 from api.v1.views import app_views
 from models.state import State
@@ -9,13 +9,16 @@ from models import storage
 
 @app_views.route('/states', methods=['GET'], strict_slashes=False)
 @app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
-def get_states(state_id=None):
+def get_state(state_id=None):
     """ get all states or state by id request """
     list_ = []
     all_states = storage.all(State)
     if state_id:
         state = all_states.get("State." + state_id, None)
-        return state.to_dict() if state else abort(404)
+        if state:
+            return state.to_dict()
+        else:
+            abort(404)
     else:
         for value in all_states.values():
             list_.append(value.to_dict())
