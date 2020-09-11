@@ -11,7 +11,7 @@ from models.place import Place
 
 @app_views.route('/cities/<city_id>/places', methods=['GET'],
                  strict_slashes=False)
-def get_place(city_id=None):
+def getplace(city_id=None):
     """ get all places or place by city id request """
 
     list_ = []
@@ -31,7 +31,6 @@ def get_place(place_id=None):
     place = storage.get(Place, place_id)
     if place:
         return place.to_dict()
-
     else:
         abort(404)
 
