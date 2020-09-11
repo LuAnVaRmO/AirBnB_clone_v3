@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """ Index page """
-from . import app_views
+from api.v1.views import app_views
 from flask import jsonify
 from models import storage
 from models.state import State
@@ -10,13 +10,13 @@ from models.user import User
 from models.place import Place
 
 
-@app_views.route('/status/', methods=['GET'], strict_slashes=False)
+@app_views.route('/status', methods=['GET'], strict_slashes=False)
 def route():
     """ Return a Json response """
     return jsonify({"status": "OK"})
 
 
-@app_views.route('/stats/', methods=['GET'], strict_slashes=False)
+@app_views.route('/stats', methods=['GET'], strict_slashes=False)
 def stats():
     """ Retrieves the number of each objects by type """
     return jsonify({"amenities": storage.count(Amenity),
