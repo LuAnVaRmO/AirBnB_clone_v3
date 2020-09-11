@@ -7,7 +7,8 @@ from models.city import City
 from models import storage
 
 
-@app_views.route('/states/<state_id>/cities', methods=['GET'], strict_slashes=False)
+@app_views.route('/states/<state_id>/cities', methods=['GET'],
+                 strict_slashes=False)
 def get_city(state_id=None):
     """ Get all cities or cities by state """
     list_ = []
@@ -50,7 +51,8 @@ def put_city(city_id):
         abort(404)
 
 
-@app_views.route('/states/<state_id>/cities', methods=['POST'], strict_slashes=False)
+@app_views.route('/states/<state_id>/cities', methods=['POST'],
+                 strict_slashes=False)
 def post_city(state_id):
     """ Create City """
     body = request.get_json()
