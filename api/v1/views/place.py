@@ -9,7 +9,8 @@ from models.city import City
 from models.place import Place
 
 
-@app_views.route('/cities/<city_id>/places', methods=['GET'], strict_slashes=False)
+@app_views.route('/cities/<city_id>/places', methods=['GET'],
+                 strict_slashes=False)
 def get_place(city_id=None):
     """ get all places or place by city id request """
 
@@ -35,7 +36,8 @@ def get_place(place_id=None):
         abort(404)
 
 
-@app_views.route('/cities/<city_id>/places', methods=['POST'], strict_slashes=False)
+@app_views.route('/cities/<city_id>/places', methods=['POST'],
+                 strict_slashes=False)
 def post_place(city_id=None):
     """ create a place """
 
