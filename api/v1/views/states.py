@@ -1,12 +1,13 @@
 #!/usr/bin/python3
 """ States API module """
+from api.v1.views import app_views
 from flask import jsonify, request, abort
 from api.v1.views import app_views
 from models.state import State
 from models import storage
 
 
-@app_views.route('/states', methods=['GET'], strict_slashes=False)
+@app_views.route('/states/', methods=['GET'], strict_slashes=False)
 def get_states(state_id=None):
     """ get all states or state by id request """
     list_ = []
