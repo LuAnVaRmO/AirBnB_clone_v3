@@ -5,6 +5,9 @@ from flask import jsonify, request, abort
 from api.v1.views import app_views
 from models.review import Review
 from models import storage
+from models.place import Place
+from models.review import Review
+from models.user import User
 
 
 @app_views.route('/places/<place_id>/reviews', methods=['GET'],
@@ -36,18 +39,20 @@ def post_review(place_id=None):
     """ send review """
     body = request.get_json()
     place = storage.get(Place, place_id)
-    if "name" not in body:
-        return jsonify({'error': 'Missing name'}), 400
-    if not body:
-        return jsonify({'error': 'Not a JSON'}), 400
+    if not place:
+        abort(404)
+    if not request.is_json:
+        return jsonify(error='Not a JSON'), 400
+    if "user_id" not in body.keys():
+        return jsonify(error="Missing user_id"), 400
     user = storage.get(User, body["user_id"])
     if not user:
         abort(404)
     if "text" not in body.keys():
         return jsonify(error="Missing text"), 400
-
     review = Review(place_id=place_id, **body)
     review.save()
+    return jsonify(review.to_dict()), 201
 
 
 @app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
