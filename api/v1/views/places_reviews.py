@@ -14,23 +14,22 @@ from models.user import User
                  strict_slashes=False)
 def get_review_by_place(place_id=None):
     """ get all reviews by place request """
-    list_ = []
-    all_places = storage.all(Place)
-    if place_id:
-        places = all_places.get("Place." + place_id, None)
-        return places.to_dict() if state else abort(404)
-    else:
-        for value in all_places.values():
+    list_rev = []
+    all_places = storage.get(Place, place_id)
+    if all_places:
+        rev = place.reviews
+        for value in rev:
             list_.append(value.to_dict())
-        return jsonify(list_), 200
+        return jsonify(list_rev), 200
+    abort(404)
 
 
 @app_views.route('/reviews/<review_id>', methods=['GET'],
                  strict_slashes=False)
 def get_review_by_id(review_id=None):
     """ get review by ID """
-    review = storage.get(Review, review_id)
-    return review.to_dict() if review else abort(404)
+    rev = storage.get(Review, review_id)
+    return rev.to_dict() if rev else abort(404)
 
 
 @app_views.route('/places/<place_id>/reviews', methods=['POST'],
@@ -39,23 +38,25 @@ def post_review(place_id=None):
     """ send review """
     body = request.get_json()
     place = storage.get(Place, place_id)
-    if not place:
+    if place:
+        if not request.is_json:
+            return jsonify(error='Not a JSON'), 400
+        if "user_id" not in body.keys():
+            return jsonify(error="Missing user_id"), 400
+    else:
         abort(404)
-    if not request.is_json:
-        return jsonify(error='Not a JSON'), 400
-    if "user_id" not in body.keys():
-        return jsonify(error="Missing user_id"), 400
     user = storage.get(User, body["user_id"])
-    if not user:
+    if user:
+        if "text" not in body.keys():
+            return jsonify(error="Missing text"), 400
+        rev = Review(place_id=place_id, **body)
+        rev.save()
+        return jsonify(rev.to_dict()), 201
+    else:
         abort(404)
-    if "text" not in body.keys():
-        return jsonify(error="Missing text"), 400
-    review = Review(place_id=place_id, **body)
-    review.save()
-    return jsonify(review.to_dict()), 201
 
 
-@app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
+@app_views.route('/reviews/<review_id>', methods=['PUT'], strict_slashes=False)
 def put_review(review_id=None):
     """ Update review """
     review = storage.get(Review, review_id)
@@ -74,7 +75,7 @@ def put_review(review_id=None):
         abort(404)
 
 
-@app_views.route('/states/<state_id>', methods=['DELETE'],
+@app_views.route('/reviews/<review_id>', methods=['DELETE'],
                  strict_slashes=False)
 def delete_review(review_id=None):
     """ Delete review by id """
