@@ -70,7 +70,7 @@ def put_review(review_id=None):
             continue
         setattr(review, key, value)
     review.save()
-    return jsonify(state.to_dict()), 200
+    return jsonify(review.to_dict()), 200
 
 
 @app_views.route('/reviews/<review_id>', methods=['DELETE'],
