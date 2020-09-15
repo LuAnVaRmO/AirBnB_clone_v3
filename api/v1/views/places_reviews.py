@@ -59,19 +59,18 @@ def post_review(place_id=None):
 def put_review(review_id=None):
     """ Update review """
     review = storage.get(Review, review_id)
-    if review:
-        body_dic = request.get_json()
-        if not body_dic:
-            return jsonify({'error': 'Not a JSON'}), 400
-        for key, value in body_dic.items():
-            if key in ['id', 'user_id', 'place_id', 'updated_at', 'updated_at',
-                       'state_id']:
-                continue
-            setattr(state, key, value)
-        review.save()
-        return jsonify(state.to_dict()), 200
-    else:
+    body_dic = request.get_json()
+    if not review:
         abort(404)
+    elif not request.is_json:
+        return jsonify({'error': 'Not a JSON'}), 400
+    for key, value in body_dic.items():
+        if key in ['id', 'user_id', 'place_id', 'updated_at', 'updated_at',
+                   'state_id']:
+            continue
+        setattr(review, key, value)
+    review.save()
+    return jsonify(review.to_dict()), 200
 
 
 @app_views.route('/reviews/<review_id>', methods=['DELETE'],
