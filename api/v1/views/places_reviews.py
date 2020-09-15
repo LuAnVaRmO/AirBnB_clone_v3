@@ -36,24 +36,23 @@ def get_review_by_id(review_id=None):
                  strict_slashes=False)
 def post_review(place_id=None):
     """ send review """
-    body = request.get_json()
     place = storage.get(Place, place_id)
-    if place:
-        if not request.is_json:
-            return jsonify(error='Not a JSON'), 400
-        if "user_id" not in body.keys():
-            return jsonify(error="Missing user_id"), 400
-    else:
+    if place is None:
         abort(404)
-    user = storage.get(User, body["user_id"])
-    if user:
-        if "text" not in body.keys():
-            return jsonify(error="Missing text"), 400
-        rev = Review(place_id=place_id, **body)
-        rev.save()
-        return jsonify(rev.to_dict()), 201
-    else:
+    if not request.get_json():
+        return jsonify({"error": "Not a JSON"}), 400
+    kwargs = request.get_json()
+    if "user_id" not in kwargs:
+        return jsonify({"error": "Missing user_id"}), 400
+    user = storage.get(User, kwargs["user_id"])
+    if user is None:
         abort(404)
+    if "text" not in kwargs:
+        return jsonify({"error": "Missing text"}), 400
+    kwargs['place_id'] = place_id
+    review = Review(**kwargs)
+    review.save()
+    return jsonify(review.to_dict()), 201
 
 
 @app_views.route('/reviews/<review_id>', methods=['PUT'], strict_slashes=False)
