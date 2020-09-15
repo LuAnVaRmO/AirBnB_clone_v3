@@ -1,9 +1,7 @@
 #!/usr/bin/python3
 """ States API module """
-from api.v1.views import app_views
+from . import app_views
 from flask import jsonify, request, abort
-from api.v1.views import app_views
-from models.review import Review
 from models import storage
 from models.place import Place
 from models.review import Review
@@ -21,7 +19,8 @@ def get_review_by_place(place_id=None):
         for value in rev:
             list_.append(value.to_dict())
         return jsonify(list_rev), 200
-    abort(404)
+    else:
+        abort(404)
 
 
 @app_views.route('/reviews/<review_id>', methods=['GET'],
@@ -36,23 +35,24 @@ def get_review_by_id(review_id=None):
                  strict_slashes=False)
 def post_review(place_id=None):
     """ send review """
+    body = request.get_json()
+
     place = storage.get(Place, place_id)
-    if place is None:
+    if not place:
         abort(404)
-    if not request.get_json():
-        return jsonify({"error": "Not a JSON"}), 400
-    kwargs = request.get_json()
-    if "user_id" not in kwargs:
-        return jsonify({"error": "Missing user_id"}), 400
-    user = storage.get(User, kwargs["user_id"])
-    if user is None:
+    if not request.is_json:
+        return jsonify(error='Not a JSON'), 400
+    if "user_id" not in body.keys():
+        return jsonify(error="Missing user_id"), 400
+
+    user = storage.get(User, body["user_id"])
+    if not user:
         abort(404)
-    if "text" not in kwargs:
-        return jsonify({"error": "Missing text"}), 400
-    kwargs['place_id'] = place_id
-    review = Review(**kwargs)
-    review.save()
-    return jsonify(review.to_dict()), 201
+    if "text" not in body.keys():
+        return jsonify(error="Missing text"), 400
+    rev = Review(place_id=place_id, **body)
+    rev.save()
+    return jsonify(rev.to_dict()), 201
 
 
 @app_views.route('/reviews/<review_id>', methods=['PUT'], strict_slashes=False)
