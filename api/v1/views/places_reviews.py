@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """ place reviews API module """
+from models.review import Review
 from models.place import Place
 from models.user import User
 from models import storage
@@ -87,7 +88,7 @@ def create_a_review(place_id=None):
 
 @app_views.route('/reviews/<review_id>', methods=['PUT'], strict_slashes=False)
 def update_a_review(review_id=None):
-    """ Updates a review object according to its id """
+    """ Updates a review object by id """
 
     to_ignore = ['id', 'user_id', 'place_id', 'created_at', 'updated_at']
 
